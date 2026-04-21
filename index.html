@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisionX Leaderboard | Hack4Tech | GLA University</title>
+  <meta name="description" content="Official VisionX Hackathon Leaderboard by Hack4Tech — GLA University. Top 25 teams ranked by total points." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cyan:    #00f5ff;
+      --cyan2:   #00c8e0;
+      --blue:    #0080ff;
+      --purple:  #7c3aed;
+      --gold:    #ffd700;
+      --silver:  #c0c8d8;
+      --bronze:  #cd7f32;
+      --bg0:     #020408;
+      --bg1:     #050c14;
+      --bg2:     #080f1c;
+      --panel:   rgba(0, 200, 224, 0.04);
+      --border:  rgba(0, 245, 255, 0.18);
+      --text:    #e2eaf5;
+      --muted:   #5a7a9a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg0);
+      color: var(--text);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .bg-canvas::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0, 245, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 245, 255, 0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      animation: gridShift 20s linear infinite;
+    }
+
+    @keyframes gridShift {
+      from { transform: translateY(0); }
+      to   { transform: translateY(60px); }
+    }
+
+    .bg-canvas::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 40% at 20% 20%, rgba(0, 128, 255, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(124, 58, 237, 0.14) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 30% at 50% 50%, rgba(0, 245, 255, 0.06) 0%, transparent 70%);
+    }
+
+    .scanline {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.08) 2px,
+        rgba(0, 0, 0, 0.08) 4px
+      );
+    }
+
+    .particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .particle {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: var(--cyan);
+      animation: floatUp linear infinite;
+      opacity: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.4; }
+      100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
+    }
+
+
+    .wrapper {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 20px 60px;
+    }
+
+    .header {
+      position: relative;
+      padding: 36px 0 20px;
+      margin-bottom: 8px;
+    }
+
+
+    .header-logos {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 20px;
+      padding: 28px 36px;
+      background: linear-gradient(135deg,
+        rgba(0, 245, 255, 0.06) 0%,
+        rgba(0, 128, 255, 0.04) 50%,
+        rgba(124, 58, 237, 0.06) 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-logos::before,
+    .header-logos::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-color: var(--cyan);
+      border-style: solid;
+    }
+    .header-logos::before {
+      top: 0; left: 0;
+      border-width: 2px 0 0 2px;
+      border-radius: 12px 0 0 0;
+    }
+    .header-logos::after {
+      bottom: 0; right: 0;
+      border-width: 0 2px 2px 0;
+      border-radius: 0 0 12px 0;
+    }
+
+    .gla-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .gla-emblem {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a2a0a 0%, #2d4a10 50%, #1a2a0a 100%);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      color: #ffd700;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .gla-emblem::before {
+      content: '';
+      position: absolute;
+      inset: 4px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .gla-text h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffd700;
+      letter-spacing: 3px;
+      text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+    }
+    .gla-text p {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      margin-top: 2px;
+    }
+    .gla-text small {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 9px;
+      color: #6daa30;
+      background: rgba(109, 170, 48, 0.12);
+      border: 1px solid rgba(109, 170, 48, 0.3);
+      padding: 1px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .visionx-center {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .visionx-logo-text {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(36px, 6vw, 62px);
+      font-weight: 900;
+      letter-spacing: 4px;
+      line-height: 1;
+      position: relative;
+      display: inline-block;
+    }
+
+    .visionx-logo-text .vision {
+      color: #ffffff;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.8),
+        0 0 30px rgba(0, 245, 255, 0.4),
+        0 0 60px rgba(0, 128, 255, 0.2);
+    }
+
+    .visionx-logo-text .x-letter {
+      color: var(--cyan);
+      display: inline-block;
+      position: relative;
+      text-shadow:
+        0 0 10px var(--cyan),
+        0 0 30px var(--cyan),
+        0 0 60px rgba(0, 245, 255, 0.6);
+      animation: xPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes xPulse {
+      0%, 100% { text-shadow: 0 0 10px var(--cyan), 0 0 30px var(--cyan), 0 0 60px rgba(0,245,255,0.6); }
+      50%       { text-shadow: 0 0 20px var(--cyan), 0 0 60px var(--cyan), 0 0 100px rgba(0,245,255,0.8); }
+    }
+
+    .visionx-tagline {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--cyan2);
+      margin-top: 6px;
+      font-weight: 500;
+      opacity: 0.8;
+    }
+
+    .h4t-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+    }
+
+    .h4t-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .h4t-icon {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow:
+        0 0 10px var(--cyan),
+        0 0 30px var(--cyan),
+        0 0 60px rgba(0, 245, 255, 0.5);
+      letter-spacing: 2px;
+      animation: h4tGlow 3s ease-in-out infinite;
+      position: relative;
+    }
+
+    .h4t-icon .bolt {
+      color: #ffd700;
+      font-style: normal;
+      text-shadow: 0 0 10px #ffd700, 0 0 30px #ffd700;
+      font-size: 22px;
+    }
+
+    @keyframes h4tGlow {
+      0%, 100% { filter: brightness(1); }
+      50%       { filter: brightness(1.4) drop-shadow(0 0 12px var(--cyan)); }
+    }
+
+    .h4t-text {
+      text-align: right;
+    }
+    .h4t-text h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--cyan);
+      letter-spacing: 2px;
+    }
+    .h4t-text p {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+    .event-title-section {
+      margin: 24px 0 8px;
+      text-align: center;
+      position: relative;
+    }
+
+    .event-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 245, 255, 0.08);
+      border: 1px solid rgba(0, 245, 255, 0.25);
+      border-radius: 20px;
+      padding: 6px 20px;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--cyan);
+      margin-bottom: 16px;
+      animation: badgePulse 3s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.2); }
+      50%       { box-shadow: 0 0 0 8px rgba(0, 245, 255, 0); }
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #00ff88;
+      border-radius: 50%;
+      animation: livePulse 1s ease-in-out infinite;
+      box-shadow: 0 0 8px #00ff88;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .main-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(22px, 4vw, 42px);
+      font-weight: 900;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #fff;
+      position: relative;
+      display: inline-block;
+    }
+
+    .main-title .highlight {
+      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 20px rgba(0, 245, 255, 0.4));
+    }
+
+    .title-underline {
+      margin: 12px auto 0;
+      width: 200px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--blue), var(--purple), transparent);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .title-underline::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 8px;
+      height: 8px;
+      background: var(--cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--cyan);
+      animation: dotSlide 3s linear infinite;
+    }
+
+    @keyframes dotSlide {
+      0%   { left: 0%; }
+      100% { left: 100%; }
+    }
+
+    .event-subtitle {
+      margin-top: 12px;
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: var(--muted);
+    }
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0;
+    }
+
+    .stat-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--cyan);
+    }
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    }
+
+    .stat-icon {
+      font-size: 24px;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--cyan);
+      text-shadow: 0 0 12px rgba(0, 245, 255, 0.5);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .podium-section {
+      margin: 32px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-header-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--cyan), transparent);
+    }
+    .section-header-line.right {
+      background: linear-gradient(90deg, transparent, var(--cyan));
+    }
+    .section-header h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: var(--cyan);
+    }
+
+    .podium {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      align-items: end;
+      margin-bottom: 16px;
+    }
+
+    .podium-card {
+      border-radius: 14px;
+      padding: 24px 16px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: transform 0.3s ease;
+    }
+    .podium-card:hover { transform: translateY(-6px); }
+
+    .podium-card.rank-1 {
+      background: linear-gradient(160deg, rgba(255,215,0,0.12) 0%, rgba(255,180,0,0.06) 100%);
+      border: 1.5px solid rgba(255, 215, 0, 0.5);
+      padding-top: 36px;
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.15), inset 0 0 40px rgba(255, 215, 0, 0.05);
+      order: 2;
+      z-index: 3;
+    }
+
+    .podium-card.rank-2 {
+      background: linear-gradient(160deg, rgba(192,200,216,0.10) 0%, rgba(150,160,180,0.06) 100%);
+      border: 1.5px solid rgba(192, 200, 216, 0.4);
+      box-shadow: 0 0 30px rgba(192, 200, 216, 0.12), inset 0 0 30px rgba(192, 200, 216, 0.04);
+      order: 1;
+    }
+
+    .podium-card.rank-3 {
+      background: linear-gradient(160deg, rgba(205,127,50,0.10) 0%, rgba(180,100,30,0.06) 100%);
+      border: 1.5px solid rgba(205, 127, 50, 0.4);
+      box-shadow: 0 0 30px rgba(205, 127, 50, 0.12), inset 0 0 30px rgba(205, 127, 50, 0.04);
+      order: 3;
+    }
+
+    .podium-rank-badge {
+      position: absolute;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 4px 16px;
+      border-radius: 0 0 10px 10px;
+    }
+    .rank-1 .podium-rank-badge { background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b); color: #000; }
+    .rank-2 .podium-rank-badge { background: linear-gradient(90deg, #708090, #c0c8d8, #708090); color: #000; }
+    .rank-3 .podium-rank-badge { background: linear-gradient(90deg, #8b4513, #cd7f32, #8b4513); color: #000; }
+
+    .podium-crown {
+      font-size: 32px;
+      display: block;
+      margin-bottom: 10px;
+      animation: crownFloat 3s ease-in-out infinite;
+    }
+    @keyframes crownFloat {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-6px); }
+    }
+
+    .podium-team {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(12px, 2vw, 16px);
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .rank-1 .podium-team { color: #ffd700; text-shadow: 0 0 12px rgba(255,215,0,0.6); }
+    .rank-2 .podium-team { color: #c0c8d8; text-shadow: 0 0 12px rgba(192,200,216,0.6); }
+    .rank-3 .podium-team { color: #cd7f32; text-shadow: 0 0 12px rgba(205,127,50,0.6); }
+
+    .podium-points {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .rank-1 .podium-points { color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.8); }
+    .rank-2 .podium-points { color: #c0c8d8; text-shadow: 0 0 20px rgba(192,200,216,0.8); }
+    .rank-3 .podium-points { color: #cd7f32; text-shadow: 0 0 20px rgba(205,127,50,0.8); }
+
+    .podium-pts-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      opacity: 0.6;
+      margin-top: 4px;
+    }
+
+
+    .leaderboard-section {
+      margin-top: 24px;
+    }
+
+    .lb-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+    }
+
+    .lb-header {
+      display: grid;
+      grid-template-columns: 64px 1fr 120px;
+      gap: 0;
+      padding: 10px 20px;
+      margin-bottom: 4px;
+    }
+    .lb-header span {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .lb-header span:last-child { text-align: right; }
+
+    .lb-row {
+      display: grid;
+      grid-template-columns: 64px 1fr 120px;
+      align-items: center;
+      padding: 14px 20px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      background: rgba(5, 15, 30, 0.6);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      margin-bottom: 5px;
+      animation: rowSlideIn 0.5s ease both;
+    }
+
+    @keyframes rowSlideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .lb-row::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--cyan);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .lb-row:hover {
+      background: rgba(0, 245, 255, 0.05);
+      border-color: rgba(0, 245, 255, 0.2);
+      transform: translateX(4px);
+    }
+    .lb-row:hover::before { opacity: 1; }
+
+    /* Top 3 rows */
+    .lb-row.top-1 {
+      background: linear-gradient(90deg, rgba(255,215,0,0.08), rgba(5,15,30,0.6));
+      border-color: rgba(255,215,0,0.2);
+    }
+    .lb-row.top-1::before { background: #ffd700; opacity: 1; }
+
+    .lb-row.top-2 {
+      background: linear-gradient(90deg, rgba(192,200,216,0.08), rgba(5,15,30,0.6));
+      border-color: rgba(192,200,216,0.2);
+    }
+    .lb-row.top-2::before { background: #c0c8d8; opacity: 1; }
+
+    .lb-row.top-3 {
+      background: linear-gradient(90deg, rgba(205,127,50,0.08), rgba(5,15,30,0.6));
+      border-color: rgba(205,127,50,0.2);
+    }
+    .lb-row.top-3::before { background: #cd7f32; opacity: 1; }
+
+    /* Rank Number */
+    .col-rank {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .rank-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      width: 36px;
+      text-align: center;
+    }
+    .rank-1-num  { color: #ffd700; text-shadow: 0 0 10px rgba(255,215,0,0.7); }
+    .rank-2-num  { color: #c0c8d8; text-shadow: 0 0 10px rgba(192,200,216,0.7); }
+    .rank-3-num  { color: #cd7f32; text-shadow: 0 0 10px rgba(205,127,50,0.7); }
+    .rank-other  { color: var(--muted); }
+
+    .rank-icon { font-size: 14px; }
+
+    .col-team {
+      display: flex;
+      flex-direction: column;
+      padding-left: 8px;
+    }
+
+    .team-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--text);
+      transition: color 0.3s ease;
+    }
+    .lb-row:hover .team-name { color: var(--cyan); }
+    .lb-row.top-1 .team-name { color: #ffd700; }
+    .lb-row.top-2 .team-name { color: #c0c8d8; }
+    .lb-row.top-3 .team-name { color: #cd7f32; }
+
+    .team-tag {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .col-score {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 5px;
+    }
+
+    .score-num {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0, 245, 255, 0.4);
+    }
+    .lb-row.top-1 .score-num { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.5); }
+    .lb-row.top-2 .score-num { color: #c0c8d8; text-shadow: 0 0 8px rgba(192,200,216,0.5); }
+    .lb-row.top-3 .score-num { color: #cd7f32; text-shadow: 0 0 8px rgba(205,127,50,0.5); }
+
+    .score-bar-wrap {
+      width: 80px;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width 1.5s cubic-bezier(0.25, 0, 0.25, 1) 0.3s;
+    }
+    .lb-row.top-1 .score-bar-fill { background: linear-gradient(90deg, #b8860b, #ffd700); }
+    .lb-row.top-2 .score-bar-fill { background: linear-gradient(90deg, #708090, #c0c8d8); }
+    .lb-row.top-3 .score-bar-fill { background: linear-gradient(90deg, #8b4513, #cd7f32); }
+
+    .footer {
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--muted);
+    }
+    .footer-text strong {
+      color: var(--cyan);
+    }
+
+    .footer-glow {
+      margin-top: 16px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: rgba(0, 245, 255, 0.3);
+    }
+
+    @media (max-width: 700px) {
+      .header-logos {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 24px;
+        padding: 20px;
+      }
+      .gla-logo { align-items: center; }
+      .h4t-logo { align-items: center; }
+      .h4t-text { text-align: center; }
+      .podium { grid-template-columns: 1fr; }
+      .podium-card { order: unset !important; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .lb-row { grid-template-columns: 50px 1fr 100px; padding: 12px 14px; }
+    }
+
+    .glitch {
+      position: relative;
+      display: inline-block;
+    }
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      font-family: inherit;
+      font-size: inherit;
+      font-weight: inherit;
+      letter-spacing: inherit;
+    }
+    .glitch::before {
+      color: var(--cyan);
+      animation: glitch1 4s infinite;
+      clip-path: polygon(0 30%, 100% 30%, 100% 50%, 0 50%);
+    }
+    .glitch::after {
+      color: var(--purple);
+      animation: glitch2 4s infinite;
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    }
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: none; opacity: 0; }
+      92%            { transform: translateX(-4px); opacity: 0.7; }
+      94%            { transform: translateX(4px); opacity: 0.7; }
+    }
+    @keyframes glitch2 {
+      0%, 88%, 100% { transform: none; opacity: 0; }
+      90%            { transform: translateX(4px); opacity: 0.5; }
+      92%            { transform: translateX(-4px); opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-canvas"></div>
+  <div class="scanline"></div>
+  <div class="particles" id="particles"></div>
+
+  <div class="wrapper">
+
+    <header class="header">
+      <div class="header-logos">
+
+        <div class="gla-logo">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="gla-emblem">GLA</div>
+            <div class="gla-text">
+              <h2>GLA UNIVERSITY</h2>
+              <p>GREATER NOIDA | MATHURA</p>
+              <small>A+ NAAC ACCREDITED</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="visionx-center">
+          <div class="visionx-logo-text">
+            <span class="vision glitch" data-text="VISION">VISION</span><span class="x-letter">X</span>
+          </div>
+          <div class="visionx-tagline">✦ TURNING VISION INTO REALITY ✦</div>
+        </div>
+
+        <div class="h4t-logo">
+          <div class="h4t-badge">
+            <div class="h4t-text">
+              <h3>HACK4TECH</h3>
+              <p>H4T CLUB · GLA</p>
+            </div>
+            <div class="h4t-icon">H<span class="bolt">&#9889;</span>T</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="event-title-section">
+        <div class="event-date-badge">
+          <span class="live-dot"></span>
+          HACKATHON RESULTS · 20 APRIL 2026
+        </div>
+        <h1 class="main-title">
+          OFFICIAL <span class="highlight">LEADERBOARD</span>
+        </h1>
+        <div class="title-underline"></div>
+        <p class="event-subtitle">TOP 25 COMPETING TEAMS — VISIONX BY HACK4TECH</p>
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <span class="stat-icon">🏆</span>
+        <div class="stat-value">25</div>
+        <div class="stat-label">FINAL TEAMS COMPETED</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">⚡</span>
+        <div class="stat-value">28</div>
+        <div class="stat-label">HIGHEST SCORE</div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-icon">🔬</span>
+        <div class="stat-value">1</div>
+        <div class="stat-label">EPIC DAY</div>
+      </div>
+    </div>
+
+    <div class="podium-section">
+      <div class="section-header">
+        <div class="section-header-line"></div>
+        <h2>🏆 HALL OF CHAMPIONS</h2>
+        <div class="section-header-line right"></div>
+      </div>
+
+      <div class="podium" id="podium"></div>
+    </div>
+
+    <div class="leaderboard-section">
+      <div class="section-header">
+        <div class="section-header-line"></div>
+        <h2>📊 FULL RANKINGS</h2>
+        <div class="section-header-line right"></div>
+      </div>
+
+      <div class="lb-header">
+        <span>RANK</span>
+        <span style="padding-left:8px;">TEAM</span>
+        <span style="text-align:right;">SCORE</span>
+      </div>
+
+      <div id="leaderboard"></div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-text">
+        Organized by <strong>Hack4Tech (H4T)</strong> · GLA University · Greater Noida | Mathura
+      </div>
+      <div class="footer-glow">VISIONX — TURNING VISION INTO REALITY</div>
+    </footer>
+
+  </div>
+  <script>
+    const RAW_TEAMS = [
+      { name: "Code Blooded",    points: 28   },
+      { name: "Hackverse",       points: 20   },
+      { name: "Fit4Hub",         points: 10   },
+      { name: "Astra",           points: 18.5 },
+      { name: "Runtime Rebels",  points: 21   },
+      { name: "The Visionaries", points: 12   },
+      { name: "Coding Jutsu",    points: 21.5 },
+      { name: "Team Suits",      points: 21.5 },
+      { name: "Anarchy",         points: 13   },
+      { name: "Web Warriors",    points: 22.5 },
+      { name: "Zyro Coders",     points: 19.5 },
+      { name: "Bug Busters",     points: 14   },
+      { name: "Deathly Hallows", points: 27.5 },
+      { name: "Init2win",        points: 25   },
+      { name: "Innova Tech",     points: 16   },
+      { name: "Scratch",         points: 11   },
+      { name: "Homobites",       points: 12   },
+      { name: "V2vector",        points: 16   },
+      { name: "Codex-Div",       points: 25   },
+      { name: "Algonauts",       points: 16   },
+      { name: "Runtime Terror",  points: 9.5  },
+      { name: "Smart Coders",    points: 17   },
+      { name: "Code Cult",       points: 8    },
+      { name: "Hackhops",        points: 20   },
+      { name: "Pokemon",         points: 22.5 },
+    ];
+
+    const TEAMS = [...RAW_TEAMS].sort((a, b) => b.points - a.points);
+
+    const MAX_POINTS = TEAMS[0].points;
+
+    const RANK_ICON = { 1: '👑', 2: '🥈', 3: '🥉' };
+
+    (function buildPodium() {
+      const podiumEl = document.getElementById('podium');
+      const crown = ['👑', '🎖️', '🏅'];
+      const classes = ['rank-1', 'rank-2', 'rank-3'];
+      const badges  = ['1st PLACE', '2nd PLACE', '3rd PLACE'];
+      const orders  = [2, 1, 3]; 
+
+      TEAMS.slice(0, 3).forEach((team, i) => {
+        const card = document.createElement('div');
+        card.className = `podium-card ${classes[i]}`;
+        card.style.order = orders[i];
+        card.innerHTML = `
+          <div class="podium-rank-badge">${badges[i]}</div>
+          <span class="podium-crown">${crown[i]}</span>
+          <div class="podium-team">${team.name}</div>
+          <div class="podium-points">${team.points}</div>
+          <div class="podium-pts-label">POINTS</div>
+        `;
+        podiumEl.appendChild(card);
+      });
+    })();
+
+    (function buildLeaderboard() {
+      const container = document.getElementById('leaderboard');
+
+      TEAMS.forEach((team, i) => {
+        const rank = i + 1;
+        const pct  = ((team.points / MAX_POINTS) * 100).toFixed(1);
+        const topClass = rank <= 3 ? ` top-${rank}` : '';
+        const numClass  = rank <= 3 ? `rank-${rank}-num` : 'rank-other';
+        const rankIcon  = RANK_ICON[rank] || '';
+
+        const row = document.createElement('div');
+        row.className = `lb-row${topClass}`;
+        row.style.animationDelay = `${i * 0.04}s`;
+
+        row.innerHTML = `
+          <div class="col-rank">
+            <span class="rank-num ${numClass}">${rank}</span>
+            ${rankIcon ? `<span class="rank-icon">${rankIcon}</span>` : ''}
+          </div>
+          <div class="col-team">
+            <span class="team-name">${team.name}</span>
+            <span class="team-tag">TEAM · VISIONX 2026</span>
+          </div>
+          <div class="col-score">
+            <span class="score-num">${team.points}</span>
+            <div class="score-bar-wrap">
+              <div class="score-bar-fill" style="width:0%" data-pct="${pct}"></div>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(row);
+      });
+
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.score-bar-fill').forEach(bar => {
+          setTimeout(() => {
+            bar.style.width = bar.dataset.pct + '%';
+          }, 300);
+        });
+      });
+    })();
+    
+    (function spawnParticles() {
+      const container = document.getElementById('particles');
+      const colors = ['#00f5ff', '#0080ff', '#7c3aed', '#00ff88', '#ffffff'];
+      for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.cssText = `
+          left: ${Math.random() * 100}%;
+          width: ${Math.random() < 0.3 ? 3 : 2}px;
+          height: ${Math.random() < 0.3 ? 3 : 2}px;
+          background: ${colors[Math.floor(Math.random() * colors.length)]};
+          animation-duration: ${8 + Math.random() * 12}s;
+          animation-delay: ${Math.random() * 12}s;
+          box-shadow: 0 0 6px currentColor;
+        `;
+        container.appendChild(p);
+      }
+    })();
+  </script>
+</body>
+</html>
