@@ -166,13 +166,14 @@
       width: 110px;
       height: 110px;
       object-fit: contain;
+      mix-blend-mode: screen;
       filter: drop-shadow(0 0 16px rgba(0, 245, 255, 0.5));
       animation: h4tLogoGlow 3s ease-in-out infinite;
     }
 
     @keyframes h4tLogoGlow {
       0%, 100% { filter: drop-shadow(0 0 16px rgba(0, 245, 255, 0.5)); }
-      50%       { filter: drop-shadow(0 0 30px rgba(0, 245, 255, 0.9)) brightness(1.15); }
+      50%       { filter: drop-shadow(0 0 30px rgba(0, 245, 255, 0.9)); }
     }
 
     .visionx-center {
